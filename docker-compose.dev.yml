@@ -1,5 +1,3 @@
-version: "3.8"
-
 # Development-only compose: starts only the database.
 # Run the backend with: cd backend && npm run dev
 
