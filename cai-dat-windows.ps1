@@ -10,7 +10,9 @@
 #   3. docker compose up -d --build
 #   4. Chờ app sẵn sàng rồi mở trình duyệt http://localhost:3080
 
-$ErrorActionPreference = 'Stop'
+# 'Continue': PowerShell 5.1 biến stderr của lệnh native (docker) thành lỗi chặn
+# khi để 'Stop'; script tự kiểm tra $LASTEXITCODE sau mỗi lệnh docker.
+$ErrorActionPreference = 'Continue'
 Set-Location -Path $PSScriptRoot
 
 function Write-Step($msg) { Write-Host "`n==> $msg" -ForegroundColor Cyan }
