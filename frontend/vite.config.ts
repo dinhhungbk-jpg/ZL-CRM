@@ -18,7 +18,9 @@ export default defineConfig({
       output: {
         // Perf 2026-06-19: tách vendor nặng thành chunk riêng, cacheable độc lập
         // (route components đã lazy-load qua router). Tránh gộp tất cả vào 1 entry chunk.
-        manualChunks(id: string) {
+        manualChunks(rawId: string) {
+          // Chuẩn hoá dấu \ của đường dẫn Windows để các so khớp 'node_modules/...' bên dưới vẫn đúng.
+          const id = rawId.replace(/\\/g, '/');
           if (id.includes('node_modules/vuetify')) return 'vuetify';
           if (id.includes('node_modules/chart.js') || id.includes('vue-chartjs')) return 'charts';
           if (id.includes('@tiptap')) return 'editor';

@@ -3,6 +3,8 @@
  * All environment variables are read once at startup and typed here.
  */
 
+import path from 'node:path';
+
 // SECURITY FIX (A2): JWT_SECRET and ENCRYPTION_KEY must NOT fall back to dev
 // defaults when NODE_ENV=production. Webhook signature forgery / token forgery
 // possible if dev defaults leak to a prod container with missing env vars.
@@ -43,7 +45,9 @@ export const config = {
   jwtSecret: requireSecret('JWT_SECRET', DEV_JWT_FALLBACK, envValue('JWT_SECRET')),
   encryptionKey: requireSecret('ENCRYPTION_KEY', DEV_ENC_FALLBACK, envValue('ENCRYPTION_KEY')),
   databaseUrl: envValue('DATABASE_URL') || 'postgresql://crmuser:password@localhost:5432/zalocrm',
-  uploadDir: envValue('UPLOAD_DIR') || '/var/lib/zalo-crm/files',
+  // Windows không có /var/lib → mặc định lưu file vào ./data/files cạnh backend.
+  uploadDir: envValue('UPLOAD_DIR')
+    || (process.platform === 'win32' ? path.join(process.cwd(), 'data', 'files') : '/var/lib/zalo-crm/files'),
   appUrl: envValue('APP_URL') || 'http://localhost:3000',
 
   /* --- S3/MinIO storage for chat attachments --- */
